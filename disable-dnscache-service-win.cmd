@@ -1,48 +1,13 @@
-@ECHO OFF
-:: Check if we are an administrator. If not, exit immediately.
-:: BatchGotAdmin
-:: Check for permissions
-if "%PROCESSOR_ARCHITECTURE%" equ "amd64" (
-    >nul 2>&1 "%SYSTEMROOT%\SysWOW64\cacls.exe" "%SYSTEMROOT%\SysWOW64\config\system"
-) else (
-    >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
+@echo off
+chcp 65001 > nul
+REM Checking administrator rights
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+    powershell -Command "Start-Process '%~f0' -ArgumentList 'am_admin' -Verb RunAs"
+    exit /b
 )
-
-:: If the error flag set, we do not have admin rights.
-if %ERRORLEVEL% neq 0 (
-    echo Requesting administrative privileges...
-    goto UACPrompt
-) else (
-    goto gotAdmin
-)
-
-:UACPrompt
-echo Set UAC = CreateObject^("Shell.Application"^) > "%TEMP%\getadmin.vbs"
-set params= %*
-echo UAC.ShellExecute "cmd.exe", "/c ""%~s0"" %params:"=""%", "", "runas", 1 >> "%TEMP%\getadmin.vbs"
-
-wscript.exe "%TEMP%\getadmin.vbs"
-del "%TEMP%\getadmin.vbs"
-exit /b
-
-:gotAdmin
-cd /d "%~dp0"
-
-:SCset
-:: https://superuser.com/a/1217703
-:: https://stackoverflow.com/a/133926
-::sc config Dnscache start= disabled
-::sc stop Dnscache
-
-:: VALUE 
-:: 2 (Automatic) (DEFAULT)
-:: 4 (Disabled) (prevent freeze network after applying huge hosts file)
-::
-:: Latest changes in security Windows 10 denied access to changing services via other tools except registry hack
-::
-:: See https://superuser.com/a/1277960
-::
-REG add "HKLM\SYSTEM\CurrentControlSet\services\Dnscache" /v Start /t REG_DWORD /d 4 /f
-echo "Reboot your system now!"
-echo .
-@PAUSE
+REM Disable the DNS Client (Dnscache) service via the registry
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\Dnscache" /v Start /t REG_DWORD /d 4 /f
+echo Dnscache service has been set to 'Disabled'.
+echo The change will take effect after a system reboot.
+pause
