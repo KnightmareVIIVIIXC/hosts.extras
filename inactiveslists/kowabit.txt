@@ -1,3 +1,4 @@
+! http://blocklist.kowabit.de/list.txt
 ! commented out false positive: ||msn.com^
 ! commented out false positive: ||live.com^
 ! commented out false positive: ||facebook.com^
