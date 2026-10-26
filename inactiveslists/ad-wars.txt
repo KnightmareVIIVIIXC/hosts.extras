@@ -1,4 +1,4 @@
-! ad-wars
+! https://github.com/jdlingyu/ad-wars
 ||03.lzzncm.com^
 ||04.lzzncm.com^
 ||3.iscrv.com^
