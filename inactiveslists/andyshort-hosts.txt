@@ -1,3 +1,4 @@
+! https://hostsfile.mine.nu/
 ||007arcadegames.com^
 ||00fun.com^
 ||00inkjets.com^
