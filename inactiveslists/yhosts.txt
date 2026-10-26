@@ -1,4 +1,4 @@
-! yhosts
+! https://github.com/VeleSila/yhosts
 ||018520.com^
 ||01daa.lutci.com^
 ||036e.cn^
